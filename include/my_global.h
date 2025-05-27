@@ -527,6 +527,11 @@ typedef int	my_socket;	/* File descriptor for sockets */
 #endif
 /* Type for functions that handles signals */
 #define sig_handler RETSIGTYPE
+#if defined (VOID_SIGHANDLER)
+#  define SIGHANDLER_RETURN return
+#else
+#  define SIGHANDLER_RETURN return (0)
+#endif
 #if defined(__GNUC__) && !defined(_lint)
 typedef char	pchar;		/* Mixed prototypes can take char */
 typedef char	puchar;		/* Mixed prototypes can take char */

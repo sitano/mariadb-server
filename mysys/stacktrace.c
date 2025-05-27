@@ -50,7 +50,7 @@ static sig_handler default_handle_fatal_signal(int sig)
   signal(sig, SIG_DFL);
   kill(getpid(), sig);
 #endif /* _WIN32 */
-  return;
+  SIGHANDLER_RETURN;
 }
 
 

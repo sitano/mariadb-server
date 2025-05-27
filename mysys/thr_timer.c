@@ -292,7 +292,7 @@ static sig_handler process_timers(struct timespec *now)
     if (cmp_timespec(timer_data->expire_time, (*now)) > 0)
       break;                                    /* All data processed */
   }
-  DBUG_VOID_RETURN;
+  DBUG_SIGHANDLER_RETURN;
 }
 
 

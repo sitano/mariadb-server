@@ -92,6 +92,12 @@ extern int (*dbug_sanity)(void);
 #define DBUG_VOID_RETURN do {DBUG_LEAVE; return;} while(0)
 #endif
 
+#if defined (VOID_SIGHANDLER)
+#  define DBUG_SIGHANDLER_RETURN DBUG_VOID_RETURN
+#else
+#  define DBUG_SIGHANDLER_RETURN DBUG_RETURN(0)
+#endif
+
 #else
 #define DBUG_LEAVE
 #define DBUG_ENTER(a)
