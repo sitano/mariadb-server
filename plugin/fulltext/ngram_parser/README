@@ -1,0 +1,65 @@
+Fulltext search ngram parser plugin to support
+CONTAINS queries via InnoDB fulltext indexes.
+
+# Usage
+
+Ensure minimum token size configuration:
+
+```
+-- Configure ngram token size with ngram_token_size,
+-- and set innodb_ft_min_token_size for InnoDB fulltext search to at least the
+-- same value.
+SET GLOBAL ngram_token_size = 3;
+SET GLOBAL innodb_ft_min_token_size = 3;
+
+-- Enable diagnostic print for debugging if needed
+SET GLOBAL innodb_ft_enable_diag_print = 1;
+
+-- Alternatively, you can set these in the configuration file or CLI flags
+--ngram_token_size=3 --innodb_ft_min_token_size=3 --innodb-ft-enable-diag-print=1
+```
+
+Check plugin is loaded:
+
+```sql
+SHOW PLUGINS SONAME 'ngram.so';
+
+or
+
+SHOW PLUGINS LIKE 'ngram';
+```
+
+Load the plugin if not loaded:
+
+```sql
+INSTALL PLUGIN ngram SONAME 'ngram.so';
+```
+
+Create a fulltext index with the ngram parser:
+
+```sql
+CREATE TABLE my_table (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT,
+    FULLTEXT(content) WITH PARSER ngram
+) ENGINE=InnoDB;
+
+-- Pay attention to the engine as the default one may be not InnoDB, and it may
+-- not support FTS.
+
+INSERT INTO my_table (content) VALUES
+('This is a sample text for fulltext search.'),
+('Another example of text to search.');
+```
+Use it in a query:
+
+```sql
+SELECT * FROM my_table WHERE MATCH(content) AGAINST('amp');
+
++----+--------------------------------------------+
+| id | content                                    |
++----+--------------------------------------------+
+| 1  | This is a sample text for fulltext search. |
+| 2  | Another example of text to search.         |
++----+--------------------------------------------+
+```
